@@ -41,7 +41,6 @@
 
 #include "radixtree/kvs.h"
 #include "radixtree/radix_tree.h"
-
 #include "kvs_metrics.h"
 
 namespace radixtree {

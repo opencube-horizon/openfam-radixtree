@@ -1,5 +1,5 @@
 /*
- *  (c) Copyright 2016-2017, 2021 Hewlett Packard Enterprise Development Company LP.
+ *  (c) Copyright 2016-2024 Hewlett Packard Enterprise Development Company LP.
  *
  *  This software is available to you under a choice of one of two
  *  licenses. You may choose to be licensed under the terms of the
@@ -24,10 +24,10 @@
  */
 
 
-#include <signal.h>
-#include <stdlib.h>
-#include <string.h>
 #include <iostream>
+#include <signal.h>
+#include <cstdlib>
+#include <cstring>
 
 #include "radixtree/failinj.h"
 

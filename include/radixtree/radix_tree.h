@@ -36,8 +36,6 @@
 
 #include "radixtree/common.h"
 
-#include "radix_tree_metrics.h"
-
 namespace radixtree {
 
 using Gptr = nvmm::GlobalPtr;
@@ -51,6 +49,7 @@ typedef enum {
 
 }UpdateFlags;
 
+class RadixTreeMetrics;
 
 class RadixTree {
 

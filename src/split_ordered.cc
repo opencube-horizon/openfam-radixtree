@@ -38,7 +38,7 @@
 #include "city.h"
 
 #include "radixtree/common.h"
-#include "radixtree/split_ordered.h"
+#include "split_ordered.h"
 #include "split_ordered_metrics.h"
 
 namespace radixtree {

@@ -29,7 +29,7 @@
 #include <string>
 #include <gtest/gtest.h>
 
-#include "radixtree/split_ordered.h"
+#include "split_ordered.h"
 
 #include "nvmm/memory_manager.h"
 #include "nvmm/epoch_manager.h"

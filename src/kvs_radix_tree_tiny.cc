@@ -40,6 +40,7 @@
 
 #include "nvmm/fam.h"
 #include "kvs_radix_tree_tiny.h"
+#include "radix_tree_metrics.h"
 
 #define CHAR2UINT64(x) (*(uint64_t *)x)
 #define CHAR2UINT64_CONST(x) (*(uint64_t const *)x)

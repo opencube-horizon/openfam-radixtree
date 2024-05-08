@@ -40,6 +40,7 @@
 
 #include "nvmm/fam.h"
 #include "kvs_radix_tree.h"
+#include "radix_tree_metrics.h"
 
 namespace radixtree {
 

@@ -38,9 +38,8 @@
 #include "nvmm/heap.h"
 
 #include "radixtree/kvs.h"
-#include "radixtree/split_ordered.h"
-
 #include "kvs_metrics.h"
+#include "split_ordered.h"
 
 
 namespace radixtree {

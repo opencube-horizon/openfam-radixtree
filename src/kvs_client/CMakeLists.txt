@@ -1,5 +1,8 @@
-set(KVS_CLIENT_SRC
-  ${CMAKE_CURRENT_SOURCE_DIR}/kvs_client.cc
+add_library(kvs_client SHARED 
+  kvs_client.cc
 )
 
-set(KVS_CLIENT_SRC "${KVS_CLIENT_SRC}" PARENT_SCOPE)
+target_link_libraries(kvs_client
+  cluster
+  Libmemcached::memcached
+)

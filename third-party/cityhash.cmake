@@ -22,7 +22,8 @@ configure_file("cityhash_config.h.in" "${cityhash_gen}/config.h" @ONLY)
 #configure_file("third_party/cityhash_byteswap.h.in" "${cityhash_gen}/byteswap.h" @ONLY)
 
 if(NOT DISABLED_CXX)
-    add_library(cityhash ${sources})
+    add_library(cityhash STATIC ${sources})
+    set_property(TARGET cityhash PROPERTY POSITION_INDEPENDENT_CODE ON)
 
     target_include_directories(cityhash PUBLIC "${cityhash_gen}")
     target_include_directories(cityhash PUBLIC "cityhash/src")
