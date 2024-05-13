@@ -36,6 +36,7 @@
 #include "nvmm/log.h"
 #include "nvmm/heap.h"
 #include "nvmm/fam.h"
+#include "common.h"
 
 using namespace radixtree;
 using namespace nvmm;
@@ -188,6 +189,7 @@ TEST(SplitOrderedList, SingleProcess) {
 
     EXPECT_EQ(NO_ERROR, heap->Close());
     EXPECT_EQ(NO_ERROR, mm->DestroyHeap(heap_id));
+    delete heap;
 }
 
 // multi-process
@@ -311,19 +313,13 @@ TEST(SplitOrderedList, MultiProcess) {
         {
             // child
             DoWork(sod, heap_id);
-            exit(0); // this will leak memory (see valgrind output)
-        }
-        else
-        {
-            // parent
-            continue;
+            exit(testing::Test::HasFailure()); // this will leak memory (see valgrind output)
         }
     }
 
     for (int i=0; i< process_count; i++)
     {
-        int status;
-        waitpid(pid[i], &status, 0);
+        ASSERT_EQ(0, wait_for_child_fork(pid[i]));
     }
 
     so = new SplitOrderedList(mm, heap, NULL, sod);
@@ -333,34 +329,14 @@ TEST(SplitOrderedList, MultiProcess) {
     // =======================================================================
     // destroy the heap
     EXPECT_EQ(NO_ERROR, mm->DestroyHeap(heap_id));
-
+    delete heap;
     // =======================================================================
     // reset epoch manager after fork() for the main process
     em->Start();
 }
 
-
-
-
-
-void InitTest(boost::log::trivial::severity_level level, bool to_console)
-{
-    // init boost::log
-    if (to_console == true)
-    {
-        nvmm::init_log(level, "");
-    }
-    else
-    {
-        nvmm::init_log(level, "mm.log");
-    }
-
-    nvmm::ResetNVMM();
-    nvmm::StartNVMM();
-}
-
 int main (int argc, char** argv) {
-    InitTest(boost::log::trivial::severity_level::debug, true);
+    ::testing::AddGlobalTestEnvironment(new Environment(nvmm::debug, true));
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

@@ -269,6 +269,7 @@ int printKVS(std::string type_str, GlobalPtr root, std::string base="", std::str
             //std::cout <<"  " << std::string(key, key_size)  << " -> " << p << std::endl;
              });
     delete tree;
+    delete heap;
     return 0;
 }
 

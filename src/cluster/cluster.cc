@@ -42,6 +42,7 @@ Cluster::Cluster()
 }
 
 Cluster::~Cluster() {
+    Final();
 }
 
 void Cluster::Init(Config &config) {

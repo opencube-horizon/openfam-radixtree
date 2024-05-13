@@ -26,7 +26,7 @@
 #ifndef TAGINDEX_H
 #define TAGINDEX_H
 
-#include "nvmm/fam.h"
+#include <nvmm/fam.h>
 
 namespace radixtree {
 

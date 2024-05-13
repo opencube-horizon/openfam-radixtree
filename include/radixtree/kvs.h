@@ -28,7 +28,7 @@
 
 #include <cstddef> // size_t
 
-#include "nvmm/global_ptr.h" // GlobalPtr
+#include <nvmm/global_ptr.h> // GlobalPtr
 #include "radixtree/common.h" // TagGptr
 
 namespace radixtree {

@@ -30,9 +30,9 @@
 #include <stack>
 #include <utility> // pair
 
-#include "nvmm/global_ptr.h"
-#include "nvmm/memory_manager.h"
-#include "nvmm/heap.h"
+#include <nvmm/global_ptr.h>
+#include <nvmm/memory_manager.h>
+#include <nvmm/heap.h>
 
 #include "radixtree/common.h"
 
@@ -47,7 +47,7 @@ typedef enum {
     FIND_OR_CREATE = 0,
     UPDATE = 1
 
-}UpdateFlags;
+} UpdateFlags;
 
 class RadixTreeMetrics;
 

@@ -145,8 +145,7 @@ private:
     // TODO: remove mutex?
     std::mutex mutex_; // for iterator deque
     // TODO: clean up used iters
-    //std::vector<RadixTree::Iter*> iters_;
-    std::deque<RadixTree::Iter*> iters_;
+    std::deque<RadixTree::Iter> iters_;
 
 
     int Open();

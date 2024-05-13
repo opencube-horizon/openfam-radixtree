@@ -23,12 +23,13 @@
  *
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <string>
-#include <gtest/gtest.h>
 #include <random>
+#include <iostream>
+#include <gtest/gtest.h>
 
 #include "radixtree/radix_tree.h"
 
@@ -36,7 +37,7 @@
 #include "nvmm/epoch_manager.h"
 #include "nvmm/heap.h"
 #include "nvmm/fam.h"
-
+#include "common.h"
 
 using namespace radixtree;
 using namespace nvmm;
@@ -74,7 +75,6 @@ inline uint64_t convert(uint64_t num) {
 #endif
     return num;
 }
-
 
 // single process: put, get, destroy
 TEST(RadixTree, SingleProcess) {
@@ -190,6 +190,8 @@ TEST(RadixTree, SingleProcess) {
 
     EXPECT_EQ(NO_ERROR, heap->Close());
     EXPECT_EQ(NO_ERROR, mm->DestroyHeap(heap_id));
+
+    delete heap;
 }
 
 
@@ -804,6 +806,8 @@ TEST(RadixTree, SingleProcessScan) {
 
     EXPECT_EQ(NO_ERROR, heap->Close());
     EXPECT_EQ(NO_ERROR, mm->DestroyHeap(heap_id));
+
+    delete heap;
 }
 
 // multi-process: put, get, destroy
@@ -961,24 +965,19 @@ TEST(RadixTree, MultiProcessStress) {
         {
             // child
             DoWork(root, heap_id);
-            exit(0); // this will leak memory (see valgrind output)
-        }
-        else
-        {
-            // parent
-            continue;
+            exit(testing::Test::HasFailure()); // this will leak memory (see valgrind output)
         }
     }
 
     for (int i=0; i< process_count; i++)
     {
-        int status;
-        waitpid(pid[i], &status, 0);
+        ASSERT_EQ(0, wait_for_child_fork(pid[i]));
     }
 
     // =======================================================================
     // destroy the heap
     EXPECT_EQ(NO_ERROR, mm->DestroyHeap(heap_id));
+    delete heap;
     // tree = new RadixTree(mm, heap, root);
     // tree->list([&mm](const key_type &key, const size_t key_size, GlobalPtr p) {
     //         char *value = (char*)mm->GlobalToLocal(p);

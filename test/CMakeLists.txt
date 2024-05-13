@@ -21,11 +21,19 @@ endif()
 
 include(GoogleTest)
 
-function (add_radixtree_test file_name)
+add_library(test_common OBJECT common.cc)
+target_link_libraries(test_common
+  nvmm::nvmm
+  Boost::log
+  gtest
+)
+
+function(add_radixtree_test file_name)
   add_executable(${file_name} ${file_name}.cc)
   add_dependencies(${file_name} radixtree_shelf_base_dir)
 
   target_link_libraries(${file_name}
+    test_common
     radixtree
     cluster
     gtest

@@ -1,5 +1,5 @@
 /*
- *  (c) Copyright 2016-2017, 2021 Hewlett Packard Enterprise Development Company LP.
+ *  (c) Copyright 2016-2024 Hewlett Packard Enterprise Development Company LP.
  *
  *  This software is available to you under a choice of one of two
  *  licenses. You may choose to be licensed under the terms of the 
@@ -25,9 +25,8 @@
 
 #include <string>
 
-#include "nvmm/global_ptr.h"
-#include "nvmm/memory_manager.h"
-#include "nvmm/epoch_manager.h"
+#include <nvmm/global_ptr.h>
+#include <nvmm/memory_manager.h>
 
 #include "radixtree/kvs.h"
 #include "radixtree/common.h" // TagGptr

@@ -24,19 +24,18 @@
  */
 
 
+#include <cassert>
 #include <stddef.h>
-#include <stdint.h>
 #include <iostream>
 #include <string>
-#include <string.h> // memset, memcpy
+#include <cstring> // memset, memcpy
 
-#include "nvmm/error_code.h"
-#include "nvmm/global_ptr.h"
-#include "nvmm/shelf_id.h"
-#include "nvmm/memory_manager.h"
-#include "nvmm/heap.h"
+#include <nvmm/error_code.h>
+#include <nvmm/global_ptr.h>
+#include <nvmm/shelf_id.h>
+#include <nvmm/memory_manager.h>
+#include <nvmm/fam.h>
 
-#include "nvmm/fam.h"
 #include "kvs_split_ordered.h"
 
 namespace radixtree {
@@ -53,6 +52,7 @@ KVSSplitOrdered::KVSSplitOrdered(Gptr descriptor, std::string base, std::string 
 KVSSplitOrdered::~KVSSplitOrdered() {
     int ret = Close();
     assert(ret==0);
+    delete metrics_;
 }
 
 void KVSSplitOrdered::Maintenance() {
@@ -76,6 +76,7 @@ int KVSSplitOrdered::Open() {
     ret = heap_->Open();
     if(ret!=nvmm::NO_ERROR) {
         delete heap_;
+        heap_ = nullptr;
         return -1;
     }
 

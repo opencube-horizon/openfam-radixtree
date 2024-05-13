@@ -36,6 +36,7 @@
 #include "nvmm/memory_manager.h"
 #include "nvmm/epoch_manager.h"
 #include "nvmm/fam.h"
+#include "common.h"
 
 using namespace radixtree;
 using namespace nvmm;
@@ -1267,19 +1268,13 @@ TEST(KeyValueStore, MultiProcessStress) {
         {
             // child
             DoWork(root);
-            exit(0); // this will leak memory (see valgrind output)
-        }
-        else
-        {
-            // parent
-            continue;
+            exit(testing::Test::HasFailure()); // this will leak memory (see valgrind output)
         }
     }
 
     for (int i=0; i< process_count; i++)
     {
-        int status;
-        waitpid(pid[i], &status, 0);
+        ASSERT_EQ(0, wait_for_child_fork(pid[i]));
     }
 
     // =======================================================================

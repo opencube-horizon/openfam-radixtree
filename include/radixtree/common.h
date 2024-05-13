@@ -27,7 +27,7 @@
 #define RADIXTREE_COMMON_H
 
 #include <cstdint>
-#include "nvmm/global_ptr.h"
+#include <nvmm/global_ptr.h>
 
 namespace radixtree {
 

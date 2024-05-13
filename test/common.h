@@ -1,5 +1,5 @@
 /*
- *  (c) Copyright 2016-2017, 2021 Hewlett Packard Enterprise Development Company LP.
+ *  (c) Copyright 2024 Hewlett Packard Enterprise Development Company LP.
  *
  *  This software is available to you under a choice of one of two
  *  licenses. You may choose to be licensed under the terms of the
@@ -23,31 +23,33 @@
  *
  */
 
-#ifndef _RADIXTREE_HRTIME_H_
-#define _RADIXTREE_HRTIME_H_
+#ifndef _NVMM_TEST_COMMON_H_
+#define _NVMM_TEST_COMMON_H_
 
-#include <time.h>
+#include <nvmm/log.h>
+#include <gtest/gtest.h>
 
+class Environment : public ::testing::Environment {
+  public:
+    Environment(boost::log::trivial::severity_level level =
+                    boost::log::trivial::severity_level::fatal,
+                bool to_console = false) {
+        level_ = level;
+        to_console_ = to_console;
+    }
+    ~Environment() override {}
 
-namespace radixtree {
+    // Override this to define how to set up the environment.
+    void SetUp() override;
 
-typedef struct timespec HRTime;
+    // Override this to define how to tear down the environment.
+    void TearDown() override {}
 
-static inline HRTime get_hrtime() {
-    struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
-    return ts;
-}
+  private:
+    boost::log::trivial::severity_level level_;
+    bool to_console_;
+};
 
-static inline size_t diff_hrtime_ns(const HRTime& start, const HRTime& end) {
-    return (end.tv_sec - start.tv_sec)*1000000000LLU + end.tv_nsec - start.tv_nsec;
-}
+int wait_for_child_fork(int pid);
 
-static inline size_t diff_hrtime_us(const HRTime& start, const HRTime& end) {
-    return diff_hrtime_ns(start, end) / 1000LLU;
-}
-
-
-} // end namespace radixtree
-
-#endif // _RADIXTREE_HRTIME_H_
+#endif

@@ -58,6 +58,7 @@ KVSRadixTreeTiny::KVSRadixTreeTiny(Gptr root, std::string base, std::string user
 KVSRadixTreeTiny::~KVSRadixTreeTiny() {
     int ret = Close();
     assert(ret==0);
+    delete metrics_;
 }
 
 void KVSRadixTreeTiny::Maintenance() {
@@ -81,6 +82,7 @@ int KVSRadixTreeTiny::Open() {
     ret = heap_->Open();
     if(ret!=nvmm::NO_ERROR) {
         delete heap_;
+        heap_ = nullptr;
         return -1;
     }
 
@@ -106,6 +108,9 @@ int KVSRadixTreeTiny::Open() {
 int KVSRadixTreeTiny::Close() {
     nvmm::ErrorCode ret;
 
+    // delete all iters
+    iters_.clear();
+
     // close the radix tree
     if (tree_) {
 // #ifdef DEBUG
@@ -124,11 +129,6 @@ int KVSRadixTreeTiny::Close() {
         heap_ = nullptr;
     }
 
-    // delete all iters
-    for (auto iter:iters_) {
-        if (iter)
-            delete iter;
-    }
     return 0;
 }
 
@@ -194,9 +194,9 @@ int KVSRadixTreeTiny::Scan (
     if (val_len > kMaxValLen)
         return -1;
 
-    RadixTree::Iter *iter=new RadixTree::Iter();
+    RadixTree::Iter iter{};
     TagGptr val_gptr;
-    int ret = tree_->scan(*iter,
+    int ret = tree_->scan(iter,
                           key, key_len, val_gptr,
                           begin_key, begin_key_len, begin_key_inclusive,
                           end_key, end_key_len, end_key_inclusive);
@@ -208,7 +208,7 @@ int KVSRadixTreeTiny::Scan (
 
     // assign iter handle
     std::lock_guard<std::mutex> lock(mutex_);
-    iters_.push_back(iter);
+    iters_.push_back(std::move(iter));
     iter_handle = (int)(iters_.size()-1);
     return 0;
 }
@@ -225,13 +225,9 @@ int KVSRadixTreeTiny::GetNext(int iter_handle,
 
     TagGptr val_gptr;
 
-    RadixTree::Iter *iter;
-    {
-        //std::lock_guard<std::mutex> lock(mutex_);
-        iter = iters_[iter_handle];
-    }
-    int ret = tree_->get_next(*iter,
-                              key, key_len, val_gptr);
+    RadixTree::Iter &iter = iters_[iter_handle]; //std::lock_guard<std::mutex> lock(mutex_); ?
+
+    int ret = tree_->get_next(iter, key, key_len, val_gptr);
     if (ret!=0)
         return -2; // no next key
 
